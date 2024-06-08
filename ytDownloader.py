@@ -2,7 +2,7 @@ from pytube import YouTube, Playlist
 from pytube.innertube import _default_clients #     Solução do problema de restrição de idade
 _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID_CREATOR"]#    Solução parte dois
 
-#   Barra de Progresso de 0 a 100%
+#   Barra de Progresso de 0 a 100% (Não foi copiada da internet, eu juro, confia)
 def on_progress(video_stream, total_size, bytes_remaining):
     total_size = video_stream.filesize
     bytes_downloaded = total_size - bytes_remaining

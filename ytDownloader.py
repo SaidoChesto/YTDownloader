@@ -1,3 +1,4 @@
+import os
 from pytube import YouTube, Playlist
 from pytube.innertube import _default_clients #     Solução do problema de restrição de idade
 _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID_CREATOR"]#    Solução parte dois
@@ -10,46 +11,87 @@ def on_progress(video_stream, total_size, bytes_remaining):
     print("\r" + "▌" * int(percent) + " " * (100 - int(percent)) + " {}%".format(int(percent)), end='')
  
 # "Interface"
-print("-------------------------")
+print("\n-------------------------")
 print("* Youtube Downloader *")
-print("-------------------------")
-print("Qual tipo de Download?")
-print("1 - Video")
-print("2 - Music Playlist \n")
- 
+print("-------------------------\n")
+
 while True:
-    opcao = input("Digite a opção: ") # Seletor
+  link = input("Link do que você gostaria de baixar: ")
+  ytvideo = "youtube.com/watch" # Encontrar uma forma disso funcionar: ytvideo = ["youtube.com/watch", "youtu.be/", "youtube.com/shorts/"]
+  ytplaylist = "youtube.com/playlist"
+
+  if link.find(ytvideo) != -1:
+    print("\nQual tipo de Download?\n")
+    print("1 - Video")
+    print("2 - Musica")
+    opt = input("\nOpção: ")
+    print('')
+
+    if opt == "1":
+      try:
+        UmVideo = YouTube(link, on_progress_callback=on_progress)# Definindo o link e Adicionando a barra de progresso
+        print(UmVideo.title)# Adicionando o titulo do video
+
+        VideoDownload = UmVideo.streams.filter(res="720p").first()
+        VideoDownload.download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Videos")# Definindo o local de download, caso não tenha o local sera no msm do .py
+        print("\n")
+      except:
+        print("\nO Link não pode ser baixado.\n")
+        continue
+      break
+    elif opt == "2":
+      try:
+        UmVideo = YouTube(link, on_progress_callback=on_progress)
+        print(UmVideo.title)
+
+        VideoDownload = UmVideo.streams.filter(only_audio=True).first()
+        out_file = VideoDownload.download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Musica")
+        print("\n")
+
+        base, ext = os.path.splitext(out_file) 
+        new_file = base + '.mp3'
+        os.rename(out_file, new_file)
+      except:
+        print("\nO Link não pode ser baixado.\n")
+        continue
+      break
+
+  elif link.find(ytplaylist) != -1:
+    print("\nQual tipo de Download?\n")
+    print("1 - Videos")
+    print("2 - Musicas")
+    opt = input("\nOpção: ")
+    print('')
  
-    # Filtros: res="1080p" | res="720p" | res="360p" | file_extension='mp4' | only_audio=True | .get_highest_resolution()
- 
-    if opcao == "1":
-        link = input("Link: ")
- 
-        try:
-          UmVideo = YouTube(link, on_progress_callback=on_progress)# Definindo o link e Adicionando a barra de progresso
-          print(UmVideo.title)# Adicionando o titulo do video
- 
-          VideoDownload = UmVideo.streams.filter(res="720p").first()
-          VideoDownload.download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Videos")# Definindo o local de download, caso não tenha o local sera no msm do .py
-        except:
-          print("\nLink inválido.\n")
-          continue
-        break
- 
-    elif opcao == "2":
-        link = input("Link: ")
+    if opt == "1":
+      try:
         pl = Playlist(link)
- 
-        try:
-          for v in pl:
-              print(v)
-              yt = YouTube(v, on_progress_callback=on_progress)
-              stream = yt.streams.filter(only_audio=True).first().download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Musica")
-        except:
-          print("\nLink inválido.\n")
-          continue
-        break
- 
-    else: 
-      print("\nInput inválido.\n")
-      continue
+        for v in pl:
+          print(v)
+          yt = YouTube(v, on_progress_callback=on_progress)
+          stream = yt.streams.filter(res="720p").first().download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Videos")
+      except:
+        print("\nO Link não pode ser baixado.\n")
+        continue
+      break
+    elif opt == "2":
+      try:
+        pl = Playlist(link)
+        for v in pl:
+          print(v)
+          yt = YouTube(v, on_progress_callback=on_progress)
+          stream = yt.streams.filter(only_audio=True).first()
+          out_file = stream.download("/Users/diegu/OneDrive/Documentos/[Minhas Coisas]/[03] Midia/[07] Youtube Downloader/Musica")
+          print("\n")
+
+          base, ext = os.path.splitext(out_file) 
+          new_file = base + '.mp3'
+          os.rename(out_file, new_file)
+      except:
+        print("\nO Link não pode ser baixado.\n")
+        continue
+      break
+
+  else:
+    print("\nLink inválido\n")
+    continue

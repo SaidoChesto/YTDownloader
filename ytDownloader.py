@@ -23,11 +23,11 @@ print("\n-------------------------")
 print("* Youtube Downloader *")
 print("-------------------------\n")
 
-# A unica coisa para mudar aqui dentro é o local de download, se não for definido os arquivos vão estar juntos do ytDownload.py, e a resolução dos videos sxe vc quiser
+# A unica coisa para mudar aqui dentro é o local de download, se não for definido os arquivos vão estar juntos do ytDownload.py, e a resolução dos videos se vc quiser
 while True:
 
   # Definção se o link é um video ou uma playlist
-  link = input("Link do que você gostaria de baixar: ")
+  link = input("Link p/ baixar: ")
   ytvideo = "youtube.com/watch" 
   ytplaylist = "youtube.com/playlist"
 
@@ -44,9 +44,11 @@ while True:
     if opt == "1":
       try:
         print(UmVideo.title)
+       
         # Como o download será feito, as opções são essas: 
         # res="1080p" | res="720p" | res="360p" | file_extension='mp4' | only_audio=True | .get_highest_resolution()
         VdDownload = UmVideo.streams.filter(res="720p").first()
+       
         VdDownload.download()# AQUI VC TROCA O LOCAL DE DOWNLOAD EM ASPAS
         print("\n")
       except:

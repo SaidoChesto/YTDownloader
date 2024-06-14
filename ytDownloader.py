@@ -28,11 +28,16 @@ while True:
 
   # Definção se o link é um video ou uma playlist
   link = input("Link p/ baixar: ")
-  ytvideo = "youtube.com/watch" 
+  ytvideo = ["youtube.com/watch", "youtu.be/", "youtube.com/shorts"]
   ytplaylist = "youtube.com/playlist"
 
+  def check(video):
+    for tipo in ytvideo:
+        if video.find(tipo) != 1:
+            return 1
+
   # Se for um Video normal
-  if link.find(ytvideo) != -1:
+  if check(link) != -1:
     interface()
     opt = input("\nOpção: ")
     print("")
